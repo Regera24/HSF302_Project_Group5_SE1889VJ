@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -22,7 +24,6 @@ public class Role{
     @Column(name = "description")
     String description;
 
-    @OneToOne
-    @JoinColumn(name = "AccountID")
-    Account account;
+    @OneToMany(mappedBy = "role",cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
+    List<Account> accounts;
 }

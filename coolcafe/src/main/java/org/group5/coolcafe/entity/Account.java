@@ -49,6 +49,7 @@ public class Account extends AbstractEntity {
     @OneToMany(mappedBy = "account",cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
     List<ReserveTable> reserveTables = new ArrayList<>();
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roleId")
     Role role;
 }
