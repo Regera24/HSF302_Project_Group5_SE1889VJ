@@ -11,4 +11,10 @@ public class AuthenticationController {
     public String home(){
         return "shop";
     }
+
+    @GetMapping("/index")
+    public String index(){
+        return "/dashboard_layout/index";
+    }
+
 }
