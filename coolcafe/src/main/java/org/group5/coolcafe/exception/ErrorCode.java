@@ -17,6 +17,9 @@ public enum ErrorCode {
     USERNAME_EXISTED(400,"Username already existed",HttpStatus.CONFLICT),
     PHONENUMBER_EXISTED(400,"Phone number already existed",HttpStatus.CONFLICT),
     OTP_INVALID(400,"OTP invalid",HttpStatus.CONFLICT),
+    NOT_ENOUGH_QUANTITY(400,"Not enough quantity!",HttpStatus.BAD_REQUEST),
+    TIME_CANT_NOT_BE_NULL(400,"Must be enter time!",HttpStatus.BAD_REQUEST),
+    TABLE_NOT_FOUND(404,"Table not exist!",HttpStatus.NOT_FOUND),
     ;
     private int code;
     private String message;
