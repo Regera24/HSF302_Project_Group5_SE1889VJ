@@ -43,11 +43,15 @@ public class Account extends AbstractEntity {
     @Column(name = "dateOfBirth")
     LocalDate dateOfBirth;
 
+    @Column(name = "token")
+    String token;
+
     @OneToMany(mappedBy = "account",cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
     List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "account",cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
     List<ReserveTable> reserveTables = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId")
