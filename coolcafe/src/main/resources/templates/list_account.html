@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CoolCoffee</title>
+
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            text-align: center;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<table id="myTable" class="display">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Avatar</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Gender</th>
+        <th>Role</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="account : ${accounts}">
+        <td th:text="${account.id}"></td>
+        <td th:text="${account.avatar}"></td>
+        <td th:text="${account.name}"></td>
+        <td th:text="${account.email}"></td>
+        <td th:text="${account.phoneNumber}"></td>
+        <td th:text="${account.gender==1?'Nam':'Nữ'}"></td>
+        <td th:text="${account.role}"></td>
+        <td>
+            <button id="updateAccount">Update</button>
+            <button id="deleteAccount">Delete</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+<button id="createAccount">create account</button>
+
+<div id="createPopup" class="popup">
+    <div class="popup-content">
+        <span id="closeCreate" class="close">×</span>
+        <h2>Create an account</h2>
+        <form id="createForm" action="/account/create" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="phoneNumber">Phone number:</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</div>
+
+<div id="updatePopup" class="popup">
+    <div class="popup-content">
+        <span id="closeUpdate" class="close">×</span>
+        <h2>Update an account</h2>
+        <form id="updateForm" action="/account/update" method="POST">
+            <label for="new-name">Name:</label>
+            <input type="text" id="new-name" name="name" required><br><br>
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
+</div>
+
+<div id="deletePopup" class="popup">
+    <div class="popup-content">
+        <span id="closeDelete" class="close">×</span>
+        <h2>Delete an account</h2>
+        <p>Are you sure to delete this account?</p>
+        <button id="confirmDelete"><a href="/account/delete">Delete</a></button>
+        <button id="cancelDelete">Cancel</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let createAccount = document.getElementById('createAccount');
+        let createPopup = document.getElementById('createPopup');
+        let closeCreate = document.getElementById('closeCreate');
+
+        let deleteAccount = document.getElementById('deleteAccount');
+        let deletePopup = document.getElementById('deletePopup');
+        let closeDelete = document.getElementById('closeDelete');
+
+        let updateAccount = document.getElementById('updateAccount');
+        let updatePopup = document.getElementById('updatePopup');
+        let closeUpdate = document.getElementById('closeUpdate');
+
+        deleteAccount.addEventListener('click',function (){
+            deletePopup.style.display = 'block';
+        });
+
+        closeDelete.addEventListener('click', function (){
+            deletePopup.style.display = 'none';
+        });
+
+        createAccount.addEventListener('click', function() {
+            createPopup.style.display = 'block';
+        });
+
+        closeCreate.addEventListener('click', function() {
+            createPopup.style.display = 'none';
+        });
+
+        updateAccount.addEventListener('click', function() {
+            updatePopup.style.display = 'block';
+        });
+
+        closeUpdate.addEventListener('click', function() {
+            updatePopup.style.display = 'none';
+        });
+    });
+</script>
+
+</html>
