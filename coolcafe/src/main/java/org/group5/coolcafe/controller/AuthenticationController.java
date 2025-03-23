@@ -78,7 +78,7 @@ public class AuthenticationController {
             redirectAttributes.addFlashAttribute("success", "Change password successfully, please login!");
         }catch (AppException e){
             redirectAttributes.addFlashAttribute("error", "Fail to change password, please try again!");
-            return "redirect:/reset-password";
+            return "redirect:/forget-password";
         }
         return "redirect:/login";
     }

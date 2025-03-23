@@ -86,24 +86,5 @@ public class AccountController {
         return "/dashboard_layout/profile";
     }
 
-    @GetMapping("/widgets")
-    public String widget(){
-        return "/dashboard_layout/widgets";
-    }
-
-    @GetMapping("/icons")
-    public String widget2(){
-        return "/dashboard_layout/font-awesome-icons";
-    }
-
-    @GetMapping("/alert")
-    public String widget3(){
-        return "/dashboard_layout/sweetalert";
-    }
-
-    @GetMapping("/forms")
-    public String forms(){
-        return "/dashboard_layout/forms";
-    }
 
 }

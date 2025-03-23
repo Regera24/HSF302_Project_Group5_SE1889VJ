@@ -77,6 +77,7 @@ public class AccountServiceImpl implements AccountService {
     public void setNewPassword(String token, String newPassword) {
         Account account = accountRepository.getAccountByToken(token).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         account.setPassword(newPassword);
+        account.setToken(null);
         accountRepository.save(account);
     }
 

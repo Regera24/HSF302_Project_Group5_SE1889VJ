@@ -30,7 +30,6 @@ public class ServeTable extends AbstractEntity{
     @OneToMany(mappedBy = "table",cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
     List<ReserveTable> reserveTables = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "orderID")
-    Order order;
+    @OneToMany(mappedBy = "table", cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
+    List<Order> orders = new ArrayList<>();
 }
