@@ -1,9 +1,11 @@
 package org.group5.coolcafe.repository;
 
 import org.group5.coolcafe.entity.Account;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +27,14 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             select count(*) from account a where a.role_id = 2
         """, nativeQuery = true)
     Long getEmployeeNumber();
+
+    Account getAccountsById(Long id);
+
+    Account findByUsername(String username);
+
+    Page<Account> findAccountsByIsActive(Boolean isActive, Pageable pageable);
+
+    Page<Account> findAccountByUsernameContaining(String keyword, Pageable pageable);
+
+    Account findByPhoneNumber(String phoneNumber);
 }
