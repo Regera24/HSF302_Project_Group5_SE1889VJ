@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 @Table(name = "HasOrderDetail")
 public class HasOrderDetail extends AbstractEntity {
     @Column(name = "quantity")

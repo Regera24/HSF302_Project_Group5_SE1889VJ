@@ -27,7 +27,7 @@ public class Order extends AbstractEntity {
     @JoinColumn(name = "AccountID")
     Account account;
 
-    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     ServeTable table;
 
     @OneToMany(mappedBy = "order",cascade = { CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.LAZY)
