@@ -8,10 +8,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface OrderDetailRepository extends JpaRepository<HasOrderDetail, Long> {
     @Modifying
     @Transactional
     @Query("DELETE FROM HasOrderDetail h WHERE h.order.id = :orderId")
     void deleteByOrderId(@Param("orderId") Long orderId);
+
+    @Query("SELECT h FROM HasOrderDetail h WHERE h.order.id = :orderId")
+    List<HasOrderDetail> findByOrder_Id(Long orderId);
+
 }

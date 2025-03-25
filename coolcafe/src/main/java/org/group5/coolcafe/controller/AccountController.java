@@ -6,6 +6,7 @@ import org.group5.coolcafe.dto.manage_account.ManageAccountDTO;
 import org.group5.coolcafe.exception.AppException;
 import org.group5.coolcafe.service.impl.AccountServiceImpl;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -81,10 +82,10 @@ public class AccountController {
 
     @PostMapping("/profile")
     public String updateProfile(@ModelAttribute @Valid ManageAccountDTO manageAccountDTO, RedirectAttributes redirectAttributes) throws IOException {
-        accountService.updateProfile("sa", manageAccountDTO);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        accountService.updateProfile(username, manageAccountDTO);
         redirectAttributes.addFlashAttribute("success", "Update profile successfully!!!");
         return "/dashboard_layout/profile";
     }
-
 
 }
