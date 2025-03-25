@@ -12,4 +12,5 @@ public interface OrderService {
     public void createOrder(OrderCreationRequest request);
     public void updateOrder(Long orderId, OrderUpdateRequest request);
     public List<OrderDTO> getOrders(int pageNo, int pageSize);
+    public int getTotalPages(int pageSize);
 }

@@ -120,4 +120,10 @@ public class OrderServiceImpl implements OrderService {
         Page<Order> orders = orderRepository.findAll(pageable);
         return orders.stream().map(orderConverter::toOrderDTO).toList();
     }
+
+    public int getTotalPages(int pageSize) {
+        long totalItems = orderRepository.count();
+        return (int) Math.ceil((double) totalItems / pageSize);
+    }
+
 }

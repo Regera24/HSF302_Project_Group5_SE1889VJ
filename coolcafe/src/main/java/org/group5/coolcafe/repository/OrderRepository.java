@@ -75,4 +75,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             select sum(o.total_amount) from orders o;
         """, nativeQuery = true)
     Double getTotalAmount();
+
+
 }

@@ -2,9 +2,12 @@ package org.group5.coolcafe.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.group5.coolcafe.dto.ProductDTO.ProductDTO;
 import org.group5.coolcafe.dto.request.AccountCreationRequest;
 import org.group5.coolcafe.exception.AppException;
+import org.group5.coolcafe.repository.ProductRepository;
 import org.group5.coolcafe.service.AccountService;
+import org.group5.coolcafe.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,10 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AccountService accountService;
+    private final ProductService productService;
 
     @GetMapping("/login")
     public String login(){
@@ -81,5 +88,48 @@ public class AuthenticationController {
             return "redirect:/forget-password";
         }
         return "redirect:/login";
+    }
+
+    @GetMapping("/unauthorized")
+    public String unauthorizedPage() {
+        return "unauthorized";
+    }
+
+    @GetMapping("/menu")
+    public String productMenu(Model model) {
+        List<ProductDTO> products = productService.findAll();
+
+        List<ProductDTO> starter_4 = new ArrayList<>();
+        List<ProductDTO> desserts_4 = new ArrayList<>();
+        List<ProductDTO> maindish_4 = new ArrayList<>();
+        List<ProductDTO> drinks_4 = new ArrayList<>();
+        int totalSize = products.size();
+        int index = 0;
+
+        if (index < totalSize) {
+            starter_4 = products.subList(index, Math.min(index + 4, totalSize));
+            index += 4;
+        }
+        if (index < totalSize) {
+            desserts_4 = products.subList(index, Math.min(index + 4, totalSize));
+            index += 4;
+        }
+
+        if (index < totalSize) {
+            maindish_4 = products.subList(index, Math.min(index + 4, totalSize));
+            index += 4;
+        }
+        if (index < totalSize) {
+            drinks_4 = products.subList(index, Math.min(index + 4, totalSize));
+            index += 4;
+        }
+
+
+        model.addAttribute("list1", starter_4);
+        model.addAttribute("list2", desserts_4);
+        model.addAttribute("list3", drinks_4);
+        model.addAttribute("list4", maindish_4);
+
+        return "menu";
     }
 }
