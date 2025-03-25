@@ -2,274 +2,78 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Order</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        /* ... (Giữ nguyên CSS của bạn) ... */
-        html, body {
-            height: 100%; /* Ensure the parent elements take the full height of the viewport */
-            margin: 0; /* Remove any default margins */
-        }
-        body {
-            background-color: #f5f5f5;
-        }
-        .create-order-container {  /* Đổi tên class cho phù hợp ngữ cảnh */
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        .order-container {
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-        }
-        .product-item {
-            display: flex;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            flex-direction: column;
-        }
-        .products {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px; /* Khoảng cách giữa các sản phẩm */
-            padding: 20px;
-        }
-
-
-        .product {
-            display: flex;
-            align-items: stretch;
-            flex-direction: column;
-            width: 300px; /* Độ rộng cố định */
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-
-        .product:hover {
-            transform: scale(1.05); /* Phóng to nhẹ khi hover */
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-
-
-        .product-details {
-            flex-grow: 1;
-        }
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-        }
-        .quantity-controls button {
-            background: #ddd;
-            border: none;
-            padding: 5px 10px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-        .total-price {
-            font-weight: bold;
-            text-align: right;
-            margin-top: 15px;
-        }
-        .submit-btn { /* Đổi class cho phù hợp với nút update */
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #0d6efd; /* Màu xanh cho nút update */
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-decoration: none;
-        }
-    </style>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<div class="create-order-container">
-    <div style="width: 100%; margin: 10px 10px;">
-        <div class="input-group" style="margin-bottom: 10px;">
-            <button type="button" class="btn btn-outline-danger" onclick="navigator()">Back to Order List</button>
-        </div>
-        <div class="products">
-            <!-- Danh sách sản phẩm, cho phép thêm vào giỏ hàng -->
-            <div th:each="product : ${products}" class="product"
-                 th:data-productid="${product.id}"
-                 th:data-name="${product.name}"
-                 th:data-price="${product.price}"
-                 th:data-soldQuantity="${product.soldQuantity}"
-                 th:data-estimatedQuantity="${product.estimatedQuantity}"
-                 th:data-image="${product.image}">
-                <p th:text="${product.name}"></p>
-                <button class="btn btn-primary btn-round" onclick="addToCart(this)">Add to Cart</button>
+<div class="container">
+    <h1>Update Order</h1>
+    <form
+            th:action="@{/order/update/{id}(id=${order.id})}"
+            th:method="post" class="mt-3" id="updateOrderForm"
+    >
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                Order Information
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="tableId" class="form-label">Serve Table</label>
+                        <div id="tableId" th:text="${order.getTableCode()}"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="status" class="form-label">Order Status</label>
+                        <select id="status" name="status" >
+                            <option value="PENDING" th:selected="${order.getStatus() == 'PENDING'}">PENDING</option>
+                            <option value="PAYED" th:selected="${order.getStatus() == 'PAYED'}">PAYED</option>
+                            <option value="DONE" th:selected="${order.getStatus() == 'DONE'}">DONE</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Order Items</label>
+                    <table class="table table-bordered" id="orderItemsTable">
+                        <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="orderDetail, index : ${order.getOrderDetails()}">
+                            <td th:text="${orderDetail.getProductName()}" class="product-name"></td>
+                            <td th:text="${orderDetail.getQuantity()}"></td>
+                            <td th:text="${orderDetail.getProductPrice()}"></td>
+                            <td th:text="${orderDetail.getQuantity() * orderDetail.getProductPrice()}"></td>
+                        </tr>
+                        <tr id="total-row">
+                            <td colspan="3" class="text-right font-weight-bold">Total Amount:</td>
+                            <td colspan="2" id="totalAmount" th:text="${order.getTotalAmount()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="submit" class="btn btn-primary">Update Order</button>
+                    <a th:href="@{/order/manage}" class="btn btn-secondary">Cancel</a>
+                   </div>
             </div>
         </div>
-    </div>
-
-    <div class="order-container">
-        <h3 class="text-center">Update Your Order</h3>
-        <div id="productList">
-            <!-- Hiển thị các sản phẩm trong giỏ hàng (để update) -->
-        </div>
-
-        <select id="serveTable">
-            <option th:each="serveTable : ${serveTables}"
-                    th:data-id="${serveTable.getServeTableId()}"
-                    th:text="${serveTable.getCode()}"
-            </option>
-        </select>
-
-        <div class="total-price">Total: $<span id="totalAmount">0.00</span></div>
-        <button class="submit-btn" onclick="updateOrder()">Update Order</button>
-    </div>
+    </form>
 </div>
 
-<script th:inline="javascript">
-    let cart = [];
-    let orderId = /*[[${orderFound.id}]]*/ null; // Lấy ID của order
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    // Load order details vào cart khi trang load
-    function loadOrderDetails() {
-        const orderDetails = /*[[${orderFound.orderDetails}]]*/ [];
-        orderDetails.forEach(detail => {
+<script>
 
-            cart.push({
-                quantity: detail.quantity,
-                productId: detail.product.id,
-                productName: detail.product.name, // Lấy từ detail.product
-                productImage: detail.product.image,  // Lấy từ detail.product
-                productPrice: detail.product.price,    // Lấy từ detail.product
-                soldQuantity: detail.product.soldQuantity,
-                estimatedQuantity: detail.product.estimatedQuantity
-            });
-
-        });
-        updateCartUI();
-    }
-
-    function navigator() {
-        window.location.href = '/order/manage'; // Back to order list
-    }
-
-    function addToCart(button) {
-        const productDiv = button.closest('.product');
-        const productName = productDiv.getAttribute('data-name');
-        const productPrice = parseFloat(productDiv.getAttribute('data-price'));
-        const soldQuantity = parseFloat(productDiv.getAttribute('data-soldQuantity'));
-        const estimatedQuantity = parseFloat(productDiv.getAttribute('data-estimatedQuantity'));
-        const image = productDiv.getAttribute('data-image');
-        const productId = parseInt(productDiv.getAttribute('data-productid'));
-
-        const existingProduct = cart.find(item => item.productId === productId);
-
-        if (existingProduct) {
-            existingProduct.quantity += 1;
-        } else {
-            cart.push({
-                quantity: 1,
-                productId: productId,
-                productName: productName,
-                productImage: image,
-                productPrice: productPrice,
-                soldQuantity: soldQuantity,
-                estimatedQuantity: estimatedQuantity
-            });
-        }
-        updateCartUI();
-    }
-
-    function updateCartUI() {
-        const productList = document.getElementById('productList');
-        productList.innerHTML = '';
-        let totalAmount = 0;
-
-        cart.forEach((item, index) => {
-            totalAmount += item.productPrice * item.quantity;
-
-            const productItem = document.createElement('div');
-            productItem.classList.add('product-item');
-            productItem.innerHTML = `
-                <span>${item.productName}</span>
-                <div class="quantity-controls">
-                    <button onclick="updateQuantity(${index}, -1)">-</button>
-                    <input type="number" value="${item.quantity}" readonly />
-                    <button onclick="updateQuantity(${index}, 1)">+</button>
-                </div>
-                <span>Quantity: ${item.estimatedQuantity - item.soldQuantity- item.quantity}</span>
-                <span>Unit Price: $${(item.productPrice * item.quantity).toFixed(2)}</span>
-                <button onclick="removeFromCart(${index})" class="btn btn-danger btn-sm">Remove</button>
-            `;
-            productList.appendChild(productItem);
-        });
-
-        document.getElementById('totalAmount').innerText = totalAmount.toFixed(2);
-    }
-
-    function updateQuantity(index, change) {
-        cart[index].quantity = Math.max(1, cart[index].quantity + change); // Số lượng không âm
-        updateCartUI();
-    }
-
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        updateCartUI();
-    }
-
-    function updateOrder() {
-        if (cart.length === 0) {
-            alert('Cart is empty!');
-            return;
-        }
-
-        const selectElement = document.getElementById("serveTable");
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
-        const selectedTableId = parseInt(selectedOption.getAttribute("data-id"));
-
-        const updatedOrder = {
-            tableId: selectedTableId, // Lấy tableId
-            orderDetails: cart.map(item => ({
-                productId: item.productId,
-                quantity: item.quantity,
-                productName: item.productName, // Thêm productName, productImage, productPrice
-                productImage: item.productImage,
-                productPrice: item.productPrice
-            }))
-        };
-
-        fetch(`/order/update/${orderId}`, { // Chú ý URL
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedOrder)
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Order updated successfully!');
-                    window.location.href = '/order/manage'; // Redirect
-                } else {
-                    response.text().then(text => alert('Failed to update order: ' + text));
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    // Gọi khi trang load
-    document.addEventListener('DOMContentLoaded', loadOrderDetails);
 </script>
 </body>
 </html>
-
-
