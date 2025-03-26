@@ -10,6 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderUpdateRequest {
-    private List<OrderDetail> orderDetails;
-    private Long tableId;
+    private String status;
 }

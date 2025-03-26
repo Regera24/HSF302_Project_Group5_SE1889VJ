@@ -33,6 +33,11 @@ public class OrderServiceImpl implements OrderService {
     private final OrderConverter orderConverter;
 
     @Override
+    public OrderDTO getOrder(Long orderId) {
+        return orderConverter.toOrderDTO(orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND)));
+    }
+
+    @Override
     public void createOrder(OrderCreationRequest request) {
         Order order = new Order();
         order.setStatus(OrderStatus.PENDING);
@@ -68,50 +73,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateOrder(Long orderId, OrderUpdateRequest request) {
+    public void updateOrder(Long orderId, String status) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-        List<HasOrderDetail> orderDetailList = order.getOrderDetails();
-
-        orderDetailList.forEach((item) -> {
-            Product product = item.getProduct();
-            product.setSoldQuantity(product.getSoldQuantity() - item.getQuantity());
-            product.setEstimatedQuantity(product.getEstimatedQuantity() + item.getQuantity());
-            productRepository.save(product);
-        });
-
-        orderDetailRepository.deleteByOrderId(orderId);
-
-        if(request.getTableId()!=null){
-            order.setTable(serveTableRepository.getReferenceById(request.getTableId()));
-        }
-
-        List<HasOrderDetail> orderDetails = request.getOrderDetails().stream().map((item) -> {
-            Product product = productRepository.findById(item.getProductId()).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-            if(product.getEstimatedQuantity() < item.getQuantity()){
-                throw new AppException(ErrorCode.UNCATEGORIZED);
-            }
-
-            product.setSoldQuantity(product.getSoldQuantity() + item.getQuantity());
-
-            return HasOrderDetail.builder()
-                    .product(product)
-                    .quantity(item.getQuantity())
-                    .productName(product.getName())
-                    .productPrice(product.getPrice())
-                    .order(order)
-                    .build();
-        }).toList();
-
-        Double sum = orderDetails.stream()
-                .map(item -> item.getQuantity() * item.getProductPrice())
-                .reduce(0.0, Double::sum);
-
-        order.setTotalAmount(sum);
-
+        System.out.println(status);
+        order.setStatus(OrderStatus.valueOf(status));
         orderRepository.save(order);
-        orderDetailRepository.saveAll(orderDetails);
     }
 
     @Override

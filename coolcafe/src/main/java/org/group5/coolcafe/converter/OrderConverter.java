@@ -8,34 +8,24 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class OrderConverter {
     private final ModelMapper modelMapper;
+    private final OrderDetailConverter orderDetailConverter;
 
     public OrderDTO toOrderDTO(Order order){
         OrderDTO orderDTO = new OrderDTO();
-
-        orderDTO.setId(order.getId());
+        orderDTO.setStatus(order.getStatus().toString());
         orderDTO.setTotalAmount(order.getTotalAmount());
-        orderDTO.setCreatedAt(order.getCreatedAt());
-        orderDTO.setUpdatedAt(order.getUpdatedAt());
-        orderDTO.setStatus(order.getStatus());
-//
-//        orderDTO.setTableId(order.getTable().getId());
-//        orderDTO.setTableCode(order.getTable().getCode());
-
-        List<OrderDetail> orderDetailList = order.getOrderDetails().stream().map((item) -> {
-            return OrderDetail.builder()
-                    .quantity(item.getQuantity())
-                    .productName(item.getProductName())
-                    .productPrice(item.getProductPrice())
-                    .build();
-        }).toList();
-
-        orderDTO.setOrderDetails(orderDetailList);
-
+        orderDTO.setId(order.getId());
+        if(order.getTable() != null) {
+            orderDTO.setTableCode(order.getTable().getCode());
+            orderDTO.setTableId(order.getTable().getId());
+        }
+        orderDTO.setOrderDetails(order.getOrderDetails().stream().map(orderDetailConverter::toOrderDetail).collect(Collectors.toList()));
         return orderDTO;
     }
 }

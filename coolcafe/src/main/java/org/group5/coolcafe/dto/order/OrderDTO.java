@@ -17,7 +17,7 @@ public class OrderDTO {
     private LocalDateTime updatedAt;
     private Long tableId;
     private String tableCode;
-    private OrderStatus status;
+    private String status;
     private Double totalAmount;
     private List<OrderDetail> orderDetails;
 }

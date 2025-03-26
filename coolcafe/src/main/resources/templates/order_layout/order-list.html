@@ -494,7 +494,7 @@
                                             <td th:text="${order.getId()}"></td>
                                             <td
                                                     th:text="${order.getStatus()}"
-                                                    th:class="${order.getStatus() == 'DONE' ? 'text-success' : order.getStatus() == 'PAYED' ? 'text-primary' : order.getStatus() == 'PENDING' ? 'text-warning' : ''}">
+                                                    th:class="${order.getStatus() == 'DONE' ? 'text-success' : (order.getStatus() == 'PAYED' ? 'text-primary' : (order.getStatus() == 'PENDING' ? 'text-warning' : ''))}">
                                             </td>
                                             <td th:text="${order.getTableCode()}"></td>
                                             <td th:text="${order.getTotalAmount()}"></td>
@@ -506,10 +506,13 @@
                                                             type="button"
                                                             class="btn btn-link btn-primary btn-lg"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#orderDetailsModal">
+                                                            data-bs-target="#orderDetailsModal"
+                                                            th:data-id="${order.getId()}"
+                                                            onclick="fetchOrderDetails(this)"
+                                                    >
                                                         <i class="bi bi-info-circle"></i>
                                                     </button>
-                                                    <a th:href="@{/order/update/{id}(id=${order.id})}"
+                                                    <a th:href="@{/order/update/{id}(id=${order.getId()})}"
                                                        class="btn btn-link btn-primary btn-lg"
                                                        data-bs-toggle="tooltip"
                                                        data-original-title="Edit Task">
@@ -565,6 +568,67 @@
 </div>
 
 <script>
+    function fetchOrderDetails(button) {
+        const orderId = button.getAttribute("data-id");
+        const modalContent = document.getElementById("modalContent");
+        modalContent.innerHTML = "<p>Loading...</p>"; // Set loading state
+
+        // Fetch Order Details via AJAX
+        fetch(`detail/${orderId}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch order details");
+                }
+                return response.json(); // Parse JSON response
+            })
+            .then((details) => {
+                let totalAmount = 0;
+                if (details.length > 0) {
+                    let tableHtml = `
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    details.forEach((detail) => {
+                        const subtotal = detail.quantity * detail.productPrice;
+                        totalAmount += subtotal;
+                        tableHtml += `
+                            <tr>
+                                <td>${detail.productName}</td>
+                                <td>${detail.quantity}</td>
+                                <td>${detail.productPrice.toFixed(2)}</td>
+                                <td>${(detail.quantity * detail.productPrice).toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+
+                    tableHtml += `
+                                <tr id="total-row">
+                                    <td colspan="3" class="text-end font-weight-bold">Total Amount:</td>
+                                    <td>${totalAmount.toFixed(2)}$</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+
+                    modalContent.innerHTML = tableHtml;
+                } else {
+                    modalContent.innerHTML = "<p>No details available for this order.</p>";
+                }
+            })
+            .catch((error) => {
+                modalContent.innerHTML = `<p>Error: ${error.message}</p>`;
+            });
+    }
+
     function updatePageSize(size) {
         const url = new URL(window.location.href);
         url.searchParams.set('pageNo', 0); // Reset to first page

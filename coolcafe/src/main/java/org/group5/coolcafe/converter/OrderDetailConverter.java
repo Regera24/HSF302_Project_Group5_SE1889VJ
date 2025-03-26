@@ -12,6 +12,12 @@ public class OrderDetailConverter {
     private final ModelMapper modelMapper;
 
     public OrderDetail toOrderDetail(HasOrderDetail hasOrderDetail) {
-        return modelMapper.map(hasOrderDetail, OrderDetail.class);
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setProductName(hasOrderDetail.getProduct().getName());
+        orderDetail.setProductPrice(hasOrderDetail.getProduct().getPrice());
+        orderDetail.setProductId(hasOrderDetail.getProduct().getId());
+        orderDetail.setProductImage(hasOrderDetail.getProduct().getImage());
+        orderDetail.setQuantity(hasOrderDetail.getQuantity());
+        return orderDetail;
     }
 }
