@@ -175,13 +175,13 @@
             </nav>
         </div>
 
-        <div class="container">
+        <div class="container" >
             <div class="page-inner">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <form action="/account/profile" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+                                <form action="/account/profile" method="post"  th:object="${profile}" enctype="multipart/form-data" onsubmit="return validateForm()">
                                     <div class="row">
                                         <div class="col-xl-4">
                                             <!-- Profile picture card-->
@@ -189,8 +189,8 @@
                                                 <div class="card-header">Profile Picture</div>
                                                 <div class="card-body text-center">
                                                     <!-- Profile picture image-->
-                                                    <img class="img-account-profile mb-2" id="profile-pic"
-                                                         src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                                    <img class="img-account-profile mb-2" id="profile-pic
+                                                         "th:src="${profile.avatar != null and profile.avatar != '' ? profile.avatar : 'http://bootdey.com/img/Content/avatar/avatar1.png'}">
                                                     <label for="input-file" class="btn btn-primary">Upload new image</label>
                                                     <input style="display: none" type="file" accept="image/jpeg, image/png, image/jpg" id="input-file" name="avatar"/>
                                                 </div>
@@ -209,9 +209,10 @@
                                                                 </small>
                                                             </div>
                                                             <input class="form-control" id="name" type="text"
-                                                                   placeholder="Enter your full name" name="name"
+                                                                   placeholder="Enter your full name" name="name" th:field="*{name}"
                                                                    oninput="validateName(this)"
                                                             >
+                                                            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></p>
                                                         </div>
 
                                                         <div class="row gx-3 mb-3">
@@ -223,9 +224,10 @@
                                                                 </div>
                                                                 <input class="form-control" id="phoneNumber" type="tel"
                                                                        placeholder="Enter your phone number"
-                                                                       name="phoneNumber"
+                                                                       name="phoneNumber"  th:field="*{phoneNumber}"
                                                                         oninput="validatePhoneNumber(this)"
                                                                 >
+                                                                <p th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red;"></p>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="d-flex">
@@ -233,8 +235,9 @@
                                                                     <small id="dobError" style="color: red; display: none;">Date of birth must be valid!</small>
                                                                 </div>
                                                                 <input class="form-control" id="dob"
-                                                                       type="date"
+                                                                       type="date" th:field="*{dob}"
                                                                        placeholder="Enter your birthday" oninput="validateDob(this)" name="dob"/>
+
                                                             </div>
                                                         </div>
                                                         <div class="mb-3">
@@ -252,11 +255,11 @@
                                                                 <small id="emailError" style="color: red; display: none;">Invalid email address!</small>
                                                             </div>
                                                             <input class="form-control" id="email"
-                                                                   type="email"
+                                                                   type="email" th:field="*{email}"
                                                                    placeholder="Enter your email address" name="email" oninput="validateEmail(this)"
                                                             >
+                                                            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red;"></p>
                                                         </div>
-
                                                         <button class="btn btn-primary" type="submit">Save changes
                                                         </button>
                                                 </div>

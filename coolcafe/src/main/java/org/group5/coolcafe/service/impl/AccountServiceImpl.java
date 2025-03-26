@@ -2,6 +2,8 @@ package org.group5.coolcafe.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.group5.coolcafe.converter.AccountConverter;
+import org.group5.coolcafe.dto.AccountDTO;
+import org.group5.coolcafe.dto.ProfileDTO;
 import org.group5.coolcafe.dto.manage_account.ManageAccountDTO;
 import org.group5.coolcafe.dto.request.AccountCreationRequest;
 import org.group5.coolcafe.entity.Account;
@@ -91,6 +93,12 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.getCustomerNumber();
     }
 
+    @Override
+    public ManageAccountDTO getAccountByUsername(String username) {
+        Account account = accountRepository.getAccountByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return accountConverter.convertAccountToAccountDTO(account);
+    }
+
     private String generate6DigitCode() {
         SecureRandom random = new SecureRandom();
         return String.format("%06d0", random.nextInt(1000000));
@@ -131,23 +139,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void updateProfile(String username,ManageAccountDTO accountDTO) throws IOException {
+    public void updateProfile(String username, ProfileDTO profileDTO) throws IOException {
         Account account = accountRepository.findByUsername(username);
-        String avatar = cloudinaryService.uploadFile(accountDTO.getAvatar());
-        if (accountDTO.getName() == null || accountDTO.getName().isEmpty() || accountDTO.getName().length()<3){
-            throw new AppException(ErrorCode.USERNAME_EXISTED);
+        if (profileDTO.getAvatar() != null){
+            String avatar = cloudinaryService.uploadFile(profileDTO.getAvatar());
+            account.setAvatar(avatar);
         }
-        if (accountDTO.getEmail() == null || accountDTO.getEmail().isEmpty()){
-            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        account.setName(profileDTO.getName());
+        account.setEmail(profileDTO.getEmail());
+        if (profileDTO.getDob() != null){
+            account.setDateOfBirth(profileDTO.getDob());
         }
-        if (accountDTO.getPhoneNumber() == null || accountDTO.getPhoneNumber().isEmpty()){
-            throw new AppException(ErrorCode.PHONENUMBER_EXISTED);
-        }
-        account.setName(accountDTO.getName());
-        account.setEmail(accountDTO.getEmail());
-        account.setDateOfBirth(LocalDate.parse(accountDTO.getDob()));
-        account.setPhoneNumber(accountDTO.getPhoneNumber());
-        account.setAvatar(avatar);
+        account.setPhoneNumber(profileDTO.getPhoneNumber());
         accountRepository.save(account);
     }
 

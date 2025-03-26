@@ -202,31 +202,35 @@
                                             </small>
                                             <div class="modal-body">
 
-                                                <form action="/account/create" method="POST">
+                                                <form action="/account/create"  method="POST" th:object="${account}">
                                                     <div class="row">
                                                         <div class="col-md-6 pe-0">
                                                             <div class="form-group form-group-default">
                                                                 <label for="username">Username:</label>
                                                                 <input type="text" id="username" name="username" class="form-control" required>
                                                             </div>
+                                                            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;"></p>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group form-group-default">
                                                                 <label for="password">Password:</label>
                                                                 <input type="text" id="password" name="password" oninput="checkPasswordLength()" class="form-control" required>
                                                             </div>
+                                                            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></p>
                                                         </div>
                                                         <div class="col-md-6 pe-0">
                                                             <div class="form-group form-group-default">
                                                                 <label for="name">Name:</label>
                                                                 <input id="name" type="text" class="form-control" placeholder="Enter your full name"/>
                                                             </div>
+                                                            <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red;"></p>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group form-group-default">
                                                                 <label for="phoneNumber">Phone number:</label>
                                                                 <input id="phoneNumber" name="phoneNumber" type="text" class="form-control" placeholder="Enter your phone number"/>
                                                             </div>
+                                                            <p th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red;"></p>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer border-0">
@@ -443,11 +447,12 @@
             warningMessageUpdate.style.display = "none";
         }
     }
+</script>
 
-
-
-
-
+<script th:if="${showCreateModal}">
+    document.addEventListener("DOMContentLoaded", function(){
+        $('#addRowModal').modal('show'); // Nếu dùng jQuery & Bootstrap 4/5
+    });
 </script>
 
 <!--   Core JS Files   -->

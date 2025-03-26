@@ -123,8 +123,6 @@ public class AuthenticationController {
             drinks_4 = products.subList(index, Math.min(index + 4, totalSize));
             index += 4;
         }
-
-
         model.addAttribute("list1", starter_4);
         model.addAttribute("list2", desserts_4);
         model.addAttribute("list3", drinks_4);

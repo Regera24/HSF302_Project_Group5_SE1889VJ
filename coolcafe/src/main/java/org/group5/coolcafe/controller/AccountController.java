@@ -2,23 +2,33 @@ package org.group5.coolcafe.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.group5.coolcafe.dto.AccountDTO;
+import org.group5.coolcafe.dto.ProfileDTO;
 import org.group5.coolcafe.dto.manage_account.ManageAccountDTO;
 import org.group5.coolcafe.exception.AppException;
 import org.group5.coolcafe.service.impl.AccountServiceImpl;
+import org.group5.coolcafe.utils.CloudinaryService;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/account")
 public class AccountController {
     private final AccountServiceImpl accountService;
+    private final RestClient.Builder builder;
+    private final CloudinaryService cloudinaryService;
 
     @GetMapping("/list")
     public String getAccountList(
@@ -36,21 +46,30 @@ public class AccountController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDirection", sortDirection);
         model.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
-        model.addAttribute("accountDTO", new ManageAccountDTO());
+        model.addAttribute("account", new ManageAccountDTO());
         return "/dashboard_layout/list_account";
     }
 
     @PostMapping("/create")
     public String createAccount(
-            @ModelAttribute @Valid ManageAccountDTO manageAccountDTO,
-            RedirectAttributes redirectAttributes){
+            @ModelAttribute("account") @Valid ManageAccountDTO manageAccountDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes,
+            Model model){
+        if (result.hasErrors()) {
+            Map<String,String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(error -> {errors.put(error.getField(), error.getDefaultMessage());});
+            model.addAttribute("errors", errors);
+            model.addAttribute("showCreateModal", true);
+            return "/dashboard_layout/list_account";
+        }
         try {
             accountService.createAccount(manageAccountDTO);
+            redirectAttributes.addFlashAttribute("success", "Create account successfully!!!");
         }catch (AppException e){
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/account/list";
         }
-        redirectAttributes.addFlashAttribute("success", "Create account successfully!!!");
         return "redirect:/account/list";
     }
 
@@ -60,11 +79,11 @@ public class AccountController {
             RedirectAttributes redirectAttributes){
         try {
             accountService.updateAccount(manageAccountDTO.getId(), manageAccountDTO);
+            redirectAttributes.addFlashAttribute("success", "Update account successfully!!!");
         } catch (AppException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/account/list";
         }
-        redirectAttributes.addFlashAttribute("success", "Update account successfully!!!");
         return "redirect:/account/list";
     }
 
@@ -76,16 +95,40 @@ public class AccountController {
     }
 
     @GetMapping("/profile")
-    public String profile(){
+    public String profile(Model model){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        ManageAccountDTO account = accountService.getAccountByUsername(username);
+        ProfileDTO profileDTO = ProfileDTO.builder()
+                                            .name(account.getName())
+                                            .dob(account.getDob())
+                                            .email(account.getEmail())
+                                            .phoneNumber(account.getPhoneNumber())
+                                            .avatar(account.getAvatar())
+                                            .build();
+        model.addAttribute("profile", profileDTO);
         return "/dashboard_layout/profile";
     }
 
     @PostMapping("/profile")
-    public String updateProfile(@ModelAttribute @Valid ManageAccountDTO manageAccountDTO, RedirectAttributes redirectAttributes) throws IOException {
+    public String updateProfile(
+            @ModelAttribute("profile") @Valid ProfileDTO profileDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) throws IOException {
+        if (result.hasErrors()) {
+            Map<String,String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(error -> {errors.put(error.getField(), error.getDefaultMessage());});
+            model.addAttribute("errors", errors);
+            return "/dashboard_layout/profile";
+        }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        accountService.updateProfile(username, manageAccountDTO);
-        redirectAttributes.addFlashAttribute("success", "Update profile successfully!!!");
+        try {
+            accountService.updateProfile(username, profileDTO);
+            redirectAttributes.addFlashAttribute("success", "Update profile successfully!!!");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         return "/dashboard_layout/profile";
     }
-
 }

@@ -1,6 +1,7 @@
 package org.group5.coolcafe.converter;
 
 import lombok.RequiredArgsConstructor;
+import org.group5.coolcafe.dto.ProfileDTO;
 import org.group5.coolcafe.dto.manage_account.ManageAccountDTO;
 import org.group5.coolcafe.entity.Account;
 import org.modelmapper.ModelMapper;
@@ -32,4 +33,5 @@ public class AccountConverter {
     public Account toAccountEntity(AccountCreationRequest request){
         return modelMapper.map(request, Account.class);
     }
+
 }
