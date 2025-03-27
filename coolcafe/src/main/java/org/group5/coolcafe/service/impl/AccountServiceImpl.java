@@ -76,9 +76,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void setNewPassword(String token, String newPassword) {
         Account account = accountRepository.getAccountByToken(token).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        account.setPassword(newPassword);
+        account.setPassword("{noop}"+newPassword);
         account.setToken(null);
         accountRepository.save(account);
+    }
+
+    @Override
+    public ManageAccountDTO getAccountByUsername(String username) {
+        Account account = accountRepository.getAccountByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return accountConverter.convertAccountToAccountDTO(account);
     }
 
     @Override
@@ -98,8 +104,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<ManageAccountDTO> getAllAccounts() {
-        List<Account> accounts = accountRepository.findAll();
-        return accounts.stream().map(accountConverter::convertAccountToAccountDTO).collect(Collectors.toList());
+        List<Account> accounts = accountRepository.getAccountByIsActive(true);
+        return accounts.stream().map(accountConverter::convertAccountToAccountDTO).toList();
     }
 
     @Override
@@ -133,7 +139,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateProfile(String username,ManageAccountDTO accountDTO) throws IOException {
         Account account = accountRepository.findByUsername(username);
-        String avatar = cloudinaryService.uploadFile(accountDTO.getAvatar());
+        if(accountDTO.getAvatar()!=null){
+            String avatar = cloudinaryService.uploadFile(accountDTO.getAvatar());
+            account.setAvatar(avatar);
+        }
         if (accountDTO.getName() == null || accountDTO.getName().isEmpty() || accountDTO.getName().length()<3){
             throw new AppException(ErrorCode.USERNAME_EXISTED);
         }
@@ -145,9 +154,10 @@ public class AccountServiceImpl implements AccountService {
         }
         account.setName(accountDTO.getName());
         account.setEmail(accountDTO.getEmail());
-        account.setDateOfBirth(LocalDate.parse(accountDTO.getDob()));
+        if(StringUtils.hasLength(accountDTO.getDob())){
+            account.setDateOfBirth(LocalDate.parse(accountDTO.getDob()));
+        }
         account.setPhoneNumber(accountDTO.getPhoneNumber());
-        account.setAvatar(avatar);
         accountRepository.save(account);
     }
 
@@ -158,9 +168,7 @@ public class AccountServiceImpl implements AccountService {
                 : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Account> accountPage = null;
-        if (keyword == null || keyword.isEmpty()) {
-            accountPage = accountRepository.findAll(pageable);
-        } accountPage = accountRepository.findAccountByUsernameContaining(keyword, pageable);
+        accountPage = accountRepository.findAccountByUsernameContainingAndIsActive(keyword, pageable, true);
         return accountPage.map(accountConverter::convertAccountToAccountDTO);
     }
 }

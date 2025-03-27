@@ -5,8 +5,10 @@ import org.group5.coolcafe.converter.CategoryConverter;
 import org.group5.coolcafe.converter.ProductConverter;
 import org.group5.coolcafe.dto.ProductDTO.ProductCreationRequest;
 import org.group5.coolcafe.dto.ProductDTO.ProductDTO;
+import org.group5.coolcafe.entity.Account;
 import org.group5.coolcafe.entity.Category;
 import org.group5.coolcafe.entity.Product;
+import org.group5.coolcafe.repository.AccountRepository;
 import org.group5.coolcafe.repository.CategoryRepository;
 import org.group5.coolcafe.repository.ProductRepository;
 import org.group5.coolcafe.service.ProductService;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryConverter categoryConverter;
     private final CloudinaryService cloudinaryService;
     private final CategoryRepository categoryRepository;
+    private final AccountRepository accountRepository;
 
 
     @Override

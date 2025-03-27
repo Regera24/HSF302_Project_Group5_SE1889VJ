@@ -5,20 +5,19 @@ import org.group5.coolcafe.converter.OrderConverter;
 import org.group5.coolcafe.dto.order.OrderCreationRequest;
 import org.group5.coolcafe.dto.order.OrderDTO;
 import org.group5.coolcafe.dto.order.OrderUpdateRequest;
+import org.group5.coolcafe.entity.Account;
 import org.group5.coolcafe.entity.HasOrderDetail;
 import org.group5.coolcafe.entity.Order;
 import org.group5.coolcafe.entity.Product;
 import org.group5.coolcafe.enums.OrderStatus;
 import org.group5.coolcafe.exception.AppException;
 import org.group5.coolcafe.exception.ErrorCode;
-import org.group5.coolcafe.repository.OrderDetailRepository;
-import org.group5.coolcafe.repository.OrderRepository;
-import org.group5.coolcafe.repository.ProductRepository;
-import org.group5.coolcafe.repository.ServeTableRepository;
+import org.group5.coolcafe.repository.*;
 import org.group5.coolcafe.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final OrderConverter orderConverter;
+    private final AccountRepository accountRepository;
 
     @Override
     public OrderDTO getOrder(Long orderId) {
@@ -68,6 +68,8 @@ public class OrderServiceImpl implements OrderService {
 
         newOrder.setTotalAmount(sum);
         orderRepository.save(newOrder);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Account account = accountRepository.findByUsername(username);
 
         orderDetailRepository.saveAll(orderDetails);
     }

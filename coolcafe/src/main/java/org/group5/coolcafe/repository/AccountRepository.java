@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
+    public List<Account> getAccountByIsActive(boolean isActive);
     public boolean existsByEmail(String email);
     public boolean existsByUsername(String username);
     public boolean existsByPhoneNumber(String phoneNumber);
@@ -34,7 +35,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Page<Account> findAccountsByIsActive(Boolean isActive, Pageable pageable);
 
-    Page<Account> findAccountByUsernameContaining(String keyword, Pageable pageable);
+    Page<Account> findAccountByUsernameContainingAndIsActive(String keyword, Pageable pageable, boolean isActive);
 
     Account findByPhoneNumber(String phoneNumber);
 }

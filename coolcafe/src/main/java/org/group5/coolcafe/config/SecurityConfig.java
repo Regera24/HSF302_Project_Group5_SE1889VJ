@@ -32,7 +32,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/styles/*", "/register", "/login", "forget-password", "reset-password", "css/**", "fonts/**","js/**",
-                                "images/**", "scss/**", "dashboard_layout/**", "/logout/**", "account/profile"
+                                "images/**", "scss/**", "dashboard_layout/**", "/logout/**", "account/profile", "/menu", "/send-otp", "/reset-password"
                                 ).permitAll()
                         .requestMatchers("/manage-booking/**").hasAnyRole("STORE_OWNER", "EMPLOYEE", "MANAGER")
                         .requestMatchers("/account/**", "/category/**", "/product/**", "/inventory/**").hasAnyRole("STORE_OWNER", "MANAGER")

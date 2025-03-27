@@ -198,67 +198,67 @@
                                         </div>
                                         <div class="col-xl-8">
 
-                                            <div class="card mb-4">
+                                            <div class="card mb-4" th:object="${account}">
                                                 <div class="card-header">Profile Infomation</div>
                                                 <div class="card-body">
-                                                        <div class="mb-3">
+                                                    <div class="mb-3">
+                                                        <div class="d-flex">
+                                                            <label class="small mb-1" for="name">FullName:</label>
+                                                            <small class="small mb-1" id="nameError" style="color: red; display: none;">
+                                                                Full name must be at least 3 characters long!
+                                                            </small>
+                                                        </div>
+                                                        <input class="form-control" id="name" type="text"
+                                                               placeholder="Enter your full name" name="name" th:value="*{name}"
+                                                               oninput="validateName(this)"
+                                                        >
+                                                    </div>
+
+                                                    <div class="row gx-3 mb-3">
+
+                                                        <div class="col-md-6">
                                                             <div class="d-flex">
-                                                                <label class="small mb-1" for="name">FullName:</label>
-                                                                <small class="small mb-1" id="nameError" style="color: red; display: none;">
-                                                                    Full name must be at least 3 characters long!
-                                                                </small>
+                                                                <label class="small mb-1" for="phoneNumber">Phone number</label>
+                                                                <small id="phoneNumberError" style="color: red; display: none;">Invalid phone number!</small>
                                                             </div>
-                                                            <input class="form-control" id="name" type="text"
-                                                                   placeholder="Enter your full name" name="name"
-                                                                   oninput="validateName(this)"
+                                                            <input class="form-control" id="phoneNumber" type="tel"
+                                                                   placeholder="Enter your phone number"
+                                                                   name="phoneNumber"  th:value="*{phoneNumber}"
+                                                                   oninput="validatePhoneNumber(this)"
                                                             >
                                                         </div>
-
-                                                        <div class="row gx-3 mb-3">
-
-                                                            <div class="col-md-6">
-                                                                <div class="d-flex">
-                                                                    <label class="small mb-1" for="phoneNumber">Phone number</label>
-                                                                    <small id="phoneNumberError" style="color: red; display: none;">Invalid phone number!</small>
-                                                                </div>
-                                                                <input class="form-control" id="phoneNumber" type="tel"
-                                                                       placeholder="Enter your phone number"
-                                                                       name="phoneNumber"
-                                                                        oninput="validatePhoneNumber(this)"
-                                                                >
+                                                        <div class="col-md-6">
+                                                            <div class="d-flex">
+                                                                <label class="small mb-1" for="dob">Date of birth</label>
+                                                                <small id="dobError" style="color: red; display: none;">Date of birth must be valid!</small>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <div class="d-flex">
-                                                                    <label class="small mb-1" for="dob">Date of birth</label>
-                                                                    <small id="dobError" style="color: red; display: none;">Date of birth must be valid!</small>
-                                                                </div>
-                                                                <input class="form-control" id="dob"
-                                                                       type="date"
-                                                                       placeholder="Enter your birthday" oninput="validateDob(this)" name="dob"/>
-                                                            </div>
+                                                            <input class="form-control" id="dob"
+                                                                   type="date" th:value="*{dob}"
+                                                                   placeholder="Enter your birthday" oninput="validateDob(this)" name="dob"/>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <div class="small mb-1">
-                                                                <label class="small mb-1" for="address">Address</label>
-                                                                <input class="form-control" id="address"
-                                                                       type="text"
-                                                                       placeholder="Enter your location" name="address">
-                                                            </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <div class="small mb-1">
+                                                            <label class="small mb-1" for="address">Address</label>
+                                                            <input class="form-control" id="address"
+                                                                   type="text"
+                                                                   placeholder="Enter your location" name="address">
                                                         </div>
+                                                    </div>
 
-                                                        <div class="mb-3">
-                                                            <div class = "d-flex">
-                                                                <label class="small mb-1" for="email">Email address</label>
-                                                                <small id="emailError" style="color: red; display: none;">Invalid email address!</small>
-                                                            </div>
-                                                            <input class="form-control" id="email"
-                                                                   type="email"
-                                                                   placeholder="Enter your email address" name="email" oninput="validateEmail(this)"
-                                                            >
+                                                    <div class="mb-3">
+                                                        <div class = "d-flex">
+                                                            <label class="small mb-1" for="email">Email address</label>
+                                                            <small id="emailError" style="color: red; display: none;">Invalid email address!</small>
                                                         </div>
+                                                        <input class="form-control" id="email"
+                                                               type="email" th:value="*{email}"
+                                                               placeholder="Enter your email address" name="email" oninput="validateEmail(this)"
+                                                        >
+                                                    </div>
 
-                                                        <button class="btn btn-primary" type="submit">Save changes
-                                                        </button>
+                                                    <button class="btn btn-primary" type="submit">Save changes
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -358,3 +358,4 @@
 <script src="/dashboard_layout/js/kaiadmin.min.js"></script>
 </body>
 </html>
+`

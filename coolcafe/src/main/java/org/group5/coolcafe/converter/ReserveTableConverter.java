@@ -17,6 +17,8 @@ public class ReserveTableConverter {
         ManageReserveTableDTO manageReserveTableDTO = new ManageReserveTableDTO();
         manageReserveTableDTO.setTable_code(reserveTable.getTable().getCode());
         manageReserveTableDTO.setUsername(reserveTable.getAccount().getUsername());
+        manageReserveTableDTO.setName(reserveTable.getAccount().getName());
+        manageReserveTableDTO.setPhoneNumber(reserveTable.getAccount().getPhoneNumber());
         manageReserveTableDTO.setTime(reserveTable.getTime());
         manageReserveTableDTO.setId(reserveTable.getId());
         return manageReserveTableDTO;

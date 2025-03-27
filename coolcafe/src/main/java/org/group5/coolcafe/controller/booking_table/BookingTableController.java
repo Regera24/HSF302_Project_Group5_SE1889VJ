@@ -36,6 +36,10 @@ public class BookingTableController {
             model.addAttribute("errorMessage", "Vui lòng chọn Thời gian Bắt đầu để tìm bàn khả dụng.");
             return "table-booking/table-booking";
         }
+        if (startTime.isBefore(LocalDateTime.now())) {
+            model.addAttribute("errorMessage", "Vui lòng chọn Thời gian khả dụng");
+            return "table-booking/table-booking";
+        }
         LocalDateTime endTime = startTime.plusHours(3);
         Page<BookingServeTableDTO> serveTables = serveTableService.getBookingTable(startTime, endTime, page, size, sortBy, descending);
         model.addAttribute("startTime", startTime);

@@ -20,6 +20,12 @@ public class OrderConverter {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setStatus(order.getStatus().toString());
         orderDTO.setTotalAmount(order.getTotalAmount());
+        if(order.getCreatedAt() != null ) {
+            orderDTO.setCreatedAt(order.getCreatedAt());
+        }
+        if(order.getUpdatedAt() != null) {
+            orderDTO.setUpdatedAt(order.getUpdatedAt());
+        }
         orderDTO.setId(order.getId());
         if(order.getTable() != null) {
             orderDTO.setTableCode(order.getTable().getCode());

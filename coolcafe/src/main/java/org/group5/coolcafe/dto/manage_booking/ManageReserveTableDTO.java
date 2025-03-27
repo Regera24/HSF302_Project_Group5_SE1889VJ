@@ -18,4 +18,6 @@ public class ManageReserveTableDTO {
     LocalDateTime time;
     String username;
     String table_code;
+    String name;
+    String phoneNumber;
 }
