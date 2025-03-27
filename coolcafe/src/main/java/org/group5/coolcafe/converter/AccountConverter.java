@@ -26,10 +26,14 @@ public class AccountConverter {
     }
 
     public Account convertAccountDTOToAccount(ManageAccountDTO manageAccountDTO) {
-        return modelMapper.map(manageAccountDTO, Account.class);
+        Account account = modelMapper.map(manageAccountDTO, Account.class);
+        account.setPassword("{noop}"+manageAccountDTO.getPassword());
+        return account;
     }
 
     public Account toAccountEntity(AccountCreationRequest request){
-        return modelMapper.map(request, Account.class);
+        Account account = modelMapper.map(request, Account.class);
+        account.setPassword("{noop}"+request.getPassword());
+        return account;
     }
 }

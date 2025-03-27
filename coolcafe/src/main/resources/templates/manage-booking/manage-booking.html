@@ -7,6 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
     <link rel="icon" href="/dashboard_layout/img/kaiadmin/favicon.ico" type="image/x-icon"/>
 
+
     <!-- Fonts and icons -->
     <script src="/dashboard_layout/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -27,10 +28,12 @@
         });
     </script>
 
+
     <!-- CSS Files -->
     <link rel="stylesheet" href="/dashboard_layout/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/dashboard_layout/css/plugins.min.css"/>
     <link rel="stylesheet" href="/dashboard_layout/css/kaiadmin.min.css"/>
+
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="/dashboard_layout/css/demo.css"/>
@@ -67,6 +70,7 @@
         <div th:insert="~{dashboard/sidebar}"></div>
     </div>
 
+
     <div class="main-panel">
         <div class="main-header">
             <!-- Main Header Logo -->
@@ -95,10 +99,12 @@
             </div>
             <!-- End Main Header Logo -->
 
+
             <!-- Navbar Header -->
             <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                 <!-- Navbar Content -->
                 <div class="container-fluid">
+
 
                     <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
 
@@ -118,9 +124,9 @@
                                     />
                                 </div>
                                 <span class="profile-username">
-                      <span class="op-7"></span>
-                      <span class="fw-bold"></span>
-                    </span>
+                     <span class="op-7"></span>
+                     <span class="fw-bold"></span>
+                   </span>
                             </a>
                             <ul class="dropdown-menu dropdown-user animated fadeIn">
                                 <div class="dropdown-user-scroll scrollbar-outer">
@@ -153,6 +159,7 @@
             <!-- End Navbar Header -->
         </div>
 
+
         <div class="container">
             <div class="page-inner">
                 <div class="row">
@@ -161,20 +168,25 @@
                             <div class="card-header">
                                 <h4 class="card-title">Booking Management</h4>
 
+
                                 <!-- Search and Filter Form -->
                                 <form th:action="@{/manage-booking}" method="get">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <label for="table_code">Table Code:</label>
-                                            <input type="text" id="table_code" name="table_code" th:value="${table_code}" placeholder="Search by table code..." class="form-control">
+                                            <input type="text" id="table_code" name="table_code"
+                                                   th:value="${table_code}" placeholder="Search by table code..."
+                                                   class="form-control" maxlength="100">
                                         </div>
                                         <div class="col-md-3">
                                             <label for="startTime">Start Time:</label>
-                                            <input type="datetime-local" id="startTime" name="startTime" th:value="${startTime}" class="form-control">
+                                            <input type="datetime-local" id="startTime" name="startTime"
+                                                   th:value="${startTime}" class="form-control">
                                         </div>
                                         <div class="col-md-3">
                                             <label for="endTime">End Time:</label>
-                                            <input type="datetime-local" id="endTime" name="endTime" th:value="${endTime}" class="form-control">
+                                            <input type="datetime-local" id="endTime" name="endTime"
+                                                   th:value="${endTime}" class="form-control">
                                         </div>
                                         <div class="col-md-3">
                                             <label style="color: white">Place holder</label>
@@ -182,10 +194,10 @@
                                         </div>
                                     </div>
                                     <!-- Keep these hidden fields to maintain other parameters -->
-                                    <input type="hidden" name="page" th:value="${currentPage}" />
-                                    <input type="hidden" name="size" th:value="${pageSize}" />
-                                    <input type="hidden" name="sortBy" th:value="${sortBy}" />
-                                    <input type="hidden" name="descending" th:value="${descending}" />
+                                    <input type="hidden" name="page" th:value="${currentPage}"/>
+                                    <input type="hidden" name="size" th:value="${pageSize}"/>
+                                    <input type="hidden" name="sortBy" th:value="${sortBy}"/>
+                                    <input type="hidden" name="descending" th:value="${descending}"/>
                                 </form>
                                 <!-- End Search and Filter Form -->
                             </div>
@@ -198,33 +210,44 @@
                                 </div>
                                 <div class="table-responsive">
                                     <table id="booking-table" class="display table table-striped table-hover">
-                                        <thead>
+                                        <thead class="text-center">
                                         <tr>
                                             <th>
-                                                <a th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage}, size=${pageSize}, sortBy='username', descending=${sortBy == 'username' ? !descending : false})}">Username</a>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Phone Number
                                             </th>
                                             <th>
                                                 <a th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage}, size=${pageSize}, sortBy='time', descending=${sortBy == 'time' ? !descending : false})}">Time</a>
-                                                <span th:if="${sortBy == 'time'}" th:text="${descending ? '▼' : '▲'}"></span>
+                                                <span th:if="${sortBy == 'time'}"
+                                                      th:text="${descending ? '▼' : '▲'}"></span>
                                             </th>
                                             <th>
-                                                <a th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage}, size=${pageSize}, sortBy='table_code', descending=${sortBy == 'table_code' ? !descending : false})}">Table Code</a>
+                                                Table Code
                                             </th>
                                             <th>Actions</th>
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="text-center">
                                         <!-- Thymeleaf loop -->
                                         <tr th:each="table : ${reserveTables}">
-                                            <td th:text="${table.username}"></td>
+                                            <td th:text="${table.name}"></td>
+                                            <td th:text="${table.phoneNumber}"></td>
                                             <td th:text="${#temporals.format(table.time, 'yyyy-MM-dd HH:mm')}"></td>
                                             <td th:text="${table.table_code}"></td>
                                             <td>
-                                                <button th:data-id="${table.id}" th:data-time="${#temporals.format(table.time, 'yyyy-MM-dd''T''HH:mm')}" th:data-tablecode="${table.table_code}" class="btn btn-primary btn-sm edit-button">Edit</button>
-
-                                                <form th:action="@{/manage-booking/delete}" method="post" style="display: inline;">
-                                                    <input type="hidden" name="id" th:value="${table.id}" />
-                                                    <button type="button" class="btn btn-danger btn-sm delete-button" th:data-id="${table.id}">Delete</button>
+                                                <button th:data-id="${table.id}"
+                                                        th:data-time="${#temporals.format(table.time, 'yyyy-MM-dd''T''HH:mm')}"
+                                                        th:data-tablecode="${table.table_code}"
+                                                        class="btn btn-primary btn-sm edit-button">Edit
+                                                </button>
+                                                <form th:action="@{/manage-booking/delete}" method="post"
+                                                      style="display: inline;">
+                                                    <input type="hidden" name="id" th:value="${table.id}"/>
+                                                    <button type="button" class="btn btn-danger btn-sm delete-button"
+                                                            th:data-id="${table.id}">Delete
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -237,25 +260,40 @@
                                     <!-- Page Size Selector -->
                                     <div>
                                         <label for="pageSizeSelect">Items per page:</label>
-                                        <select id="pageSizeSelect" onchange="changePageSize()" class="form-select form-select-sm d-inline-block w-auto">
-                                            <option th:each="sizeOption : ${ {5, 10, 15, 20} }" th:value="${sizeOption}" th:text="${sizeOption}" th:selected="${sizeOption == pageSize}"></option>
+                                        <select id="pageSizeSelect" onchange="changePageSize()"
+                                                class="form-select form-select-sm d-inline-block w-auto">
+                                            <option th:each="sizeOption : ${ {5, 10, 15, 20} }" th:value="${sizeOption}"
+                                                    th:text="${sizeOption}"
+                                                    th:selected="${sizeOption == pageSize}"></option>
                                         </select>
                                     </div>
+
 
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination">
                                             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                                                <a class="page-link" th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage - 1}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}" aria-label="Previous">
+                                                <a class="page-link"
+                                                   th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage - 1}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}"
+                                                   aria-label="Previous">
                                                     <span aria-hidden="true">«</span>
                                                 </a>
                                             </li>
 
-                                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, reserveTables.totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? 'active'">
-                                                <a class="page-link" th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${pageNumber}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}" th:text="${pageNumber + 1}"></a>
+
+                                            <li class="page-item"
+                                                th:each="pageNumber : ${#numbers.sequence(0, reserveTables.totalPages - 1)}"
+                                                th:classappend="${pageNumber == currentPage} ? 'active'">
+                                                <a class="page-link"
+                                                   th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${pageNumber}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}"
+                                                   th:text="${pageNumber + 1}"></a>
                                             </li>
 
-                                            <li class="page-item" th:classappend="${currentPage == reserveTables.totalPages - 1} ? 'disabled'">
-                                                <a class="page-link" th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}" aria-label="Next">
+
+                                            <li class="page-item"
+                                                th:classappend="${currentPage == reserveTables.totalPages - 1} ? 'disabled'">
+                                                <a class="page-link"
+                                                   th:href="@{/manage-booking(startTime=${startTime}, endTime=${endTime}, table_code=${table_code}, page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}"
+                                                   aria-label="Next">
                                                     <span aria-hidden="true">»</span>
                                                 </a>
                                             </li>
@@ -271,6 +309,7 @@
     </div>
 </div>
 
+
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -281,14 +320,15 @@
             </div>
             <div class="modal-body">
                 <form id="editForm" th:action="@{/manage-booking/update}" method="post">
-                    <input type="hidden" id="editId" name="id" />
+                    <input type="hidden" id="editId" name="id"/>
                     <div class="form-group">
                         <label for="editStartTime">Start Time</label>
                         <input type="datetime-local" class="form-control" id="editStartTime" name="startTime" required>
                     </div>
                     <div class="form-group">
                         <label for="editTableCode">Table Code</label>
-                        <input type="text" class="form-control" id="editTableCode" name="tableCode" required>
+                        <input type="text" class="form-control" id="editTableCode" name="tableCode" required
+                               maxlength="100">
                     </div>
                 </form>
             </div>
@@ -300,8 +340,10 @@
     </div>
 </div>
 
+
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -315,13 +357,14 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <!-- Form được đưa vào trong modal-footer -->
                 <form th:action="@{/manage-booking/delete}" method="post">
-                    <input type="hidden" name="id" />
+                    <input type="hidden" name="id"/>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <script src="/dashboard_layout/js/core/jquery-3.7.1.min.js"></script>
 <script src="/dashboard_layout/js/core/popper.min.js"></script>
@@ -335,31 +378,36 @@
 <!-- Kaiadmin DEMO methods, don't include it in your project! -->
 <script src="/dashboard_layout/js/setting-demo2.js"></script>
 
+
 <script>
-    $(document).ready(function() {
-        $('.edit-button').click(function() {
+    $(document).ready(function () {
+        $('.edit-button').click(function () {
             const id = $(this).data('id');
             console.log("Edit ID:", id);
             const time = $(this).data('time');
             const tableCode = $(this).data('tablecode');
 
+
             $('#editId').val(id);
             $('#editStartTime').val(time);
             $('#editTableCode').val(tableCode);
 
+
             $('#editModal').modal('show');
         });
 
-        $('.delete-button').click(function() {
+
+        $('.delete-button').click(function () {
             const id = $(this).data('id');
             console.log("Delete ID:", id);
             $('#deleteModal input[name="id"]').val(id);
             $('#deleteModal').modal('show');
         });
-        $('.modal').on('hidden.bs.modal', function() {
+        $('.modal').on('hidden.bs.modal', function () {
             $(this).find('form').trigger('reset');
         });
     });
+
 
     function changePageSize() {
         const pageSize = document.getElementById('pageSizeSelect').value;
@@ -371,3 +419,6 @@
 </script>
 </body>
 </html>
+
+
+

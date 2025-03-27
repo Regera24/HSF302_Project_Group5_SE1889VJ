@@ -15,7 +15,7 @@ public interface AccountService {
     public void setNewPassword(String token, String newPassword);
     public Long getNumberOfEmployee();
     public Long getNumberOfCustomer();
-
+    public ManageAccountDTO getAccountByUsername(String username);
     public List<ManageAccountDTO> getAllAccounts();
     public void createAccount(ManageAccountDTO manageAccountDTO);
     public void updateAccount(String id, ManageAccountDTO manageAccountDTO);

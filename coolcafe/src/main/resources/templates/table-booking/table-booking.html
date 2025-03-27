@@ -17,7 +17,9 @@
         <i class="bi bi-arrow-left"></i> Back to Home
     </a>
 
+
     <h1 class="mb-4"><i class="bi bi-calendar-check-fill table-icon"></i> Book a Table at CoolCafe</h1>
+
 
     <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle-fill table-icon"></i> <span th:text="${successMessage}"></span>
@@ -32,6 +34,7 @@
         </button>
     </div>
 
+
     <!-- Booking Form for Time Selection -->
     <div class="booking-form">
         <h2 class="mb-3"><i class="bi bi-clock-fill table-icon"></i> Select Booking Time</h2>
@@ -39,13 +42,14 @@
             <div class="form-group">
                 <label for="startTime"><i class="bi bi-calendar-date-fill table-icon"></i> Start Time:</label>
                 <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
-                <div id="startTimeError" class="invalid-feedback">Please select a start time.</div>
+                <div id="startTimeError" class="invalid-feedback">Please select a start time in the future.</div>
             </div>
             <button type="submit" class="btn btn-success btn-block" onclick="return validateForm()">
                 <i class="bi bi-search table-icon"></i> Find Available Tables
             </button>
         </form>
     </div>
+
 
     <!-- Available Tables Display -->
     <div th:if="${serveTables}" class="available-tables-section">
@@ -88,6 +92,7 @@
             </table>
         </div>
 
+
         <!-- Pagination -->
         <nav th:if="${serveTables.totalPages > 1}" aria-label="Page navigation">
             <ul class="pagination justify-content-center">
@@ -117,7 +122,9 @@
         <i class="bi bi-info-circle-fill table-icon"></i> Please select a time to find available tables.
     </div>
 
+
 </div>
+
 
 <!-- Booking Confirmation Modal -->
 <div class="modal fade" id="bookingConfirmationModal" tabindex="-1" role="dialog"
@@ -141,7 +148,7 @@
                     <span class="booking-detail-label">Start Time:</span>
                     <span th:with="startTimeValue=${param.startTime != null and #lists.size(param.startTime) > 0 ? param.startTime[0] : null}"
                           th:text="${startTimeValue != null ? #temporals.format(T(java.time.LocalDateTime).parse(startTimeValue), 'yyyy-MM-dd HH:mm') : ''}">
-                    </span>
+                   </span>
                 </p>
             </div>
             <div class="modal-footer">
@@ -161,15 +168,18 @@
     </div>
 </div>
 
+
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
 <script th:inline="javascript">
     function validateForm() {
         const startTimeInput = document.getElementById('startTime');
         const startTimeError = document.getElementById('startTimeError');
+
 
         if (!startTimeInput.value) {
             startTimeError.style.display = 'block';
@@ -181,6 +191,7 @@
             return true;
         }
     }
+
 
     $('#bookingConfirmationModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -196,5 +207,36 @@
     })
 </script>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const startTimeInput = document.getElementById('startTime');
+        const startTimeError = document.getElementById('startTimeError');
+        function setMinStartTime() {
+            const now = new Date();
+            const nowUTC = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+            const minDateTime = nowUTC.toISOString().slice(0, 16);
+            startTimeInput.setAttribute('min', minDateTime);
+        }
+
+
+        startTimeInput.addEventListener('change', function () {
+            const selectedDateTime = new Date(startTimeInput.value);
+            const now = new Date();
+            if (selectedDateTime <= now) {
+                startTimeInput.classList.add('is-invalid');
+                startTimeError.style.display = 'block';
+            } else {
+                startTimeInput.classList.remove('is-invalid');
+                startTimeError.style.display = 'none';
+            }
+        });
+        setMinStartTime();
+        setInterval(setMinStartTime, 60000);
+    });
+</script>
+
+
 </body>
 </html>
+

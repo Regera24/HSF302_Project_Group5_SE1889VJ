@@ -62,6 +62,7 @@ public class AuthenticationController {
 
     @PostMapping("/send-otp")
     public String sendOtp(@RequestParam String username, RedirectAttributes redirectAttributes){
+        System.out.println("???");
         try{
             accountService.sendEmail(username);
             redirectAttributes.addFlashAttribute("success", "Email has been sent, please check your inbox!");

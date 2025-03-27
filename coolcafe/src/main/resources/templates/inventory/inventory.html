@@ -7,6 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"/>
     <link rel="icon" href="/dashboard_layout/img/kaiadmin/favicon.ico" type="image/x-icon"/>
 
+
     <!-- Fonts and icons -->
     <script src="/dashboard_layout/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -27,10 +28,12 @@
         });
     </script>
 
+
     <!-- CSS Files -->
     <link rel="stylesheet" href="/dashboard_layout/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/dashboard_layout/css/plugins.min.css"/>
     <link rel="stylesheet" href="/dashboard_layout/css/kaiadmin.min.css"/>
+
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="/dashboard_layout/css/demo.css"/>
@@ -65,9 +68,11 @@
         </div>
         <!-- End Logo Header -->
 
+
         <!-- Sidebar Content -->
         <div th:insert="~{dashboard/sidebar}"></div>
     </div>
+
 
     <div class="main-panel">
         <div class="main-header">
@@ -97,10 +102,12 @@
             </div>
             <!-- End Main Header Logo -->
 
+
             <!-- Navbar Header -->
             <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                 <!-- Navbar Content -->
                 <div class="container-fluid">
+
 
                     <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                         <li class="nav-item topbar-icon dropdown hidden-caret">
@@ -122,9 +129,9 @@
                                     />
                                 </div>
                                 <span class="profile-username">
-                      <span class="op-7"></span>
-                      <span class="fw-bold"></span>
-                    </span>
+                     <span class="op-7"></span>
+                     <span class="fw-bold"></span>
+                   </span>
                             </a>
                             <ul class="dropdown-menu dropdown-user animated fadeIn">
                                 <div class="dropdown-user-scroll scrollbar-outer">
@@ -149,6 +156,7 @@
                                         </div>
                                     </li>
 
+
                                 </div>
                             </ul>
                         </li>
@@ -157,6 +165,7 @@
             </nav>
             <!-- End Navbar Header -->
         </div>
+
 
         <div class="container">
             <div class="page-inner">
@@ -168,7 +177,9 @@
                                 <!-- Search Form -->
                                 <form th:action="@{/inventory}" method="get">
                                     <div class="input-group">
-                                        <input type="text" name="name" th:value="${name}" placeholder="Search by name..." class="form-control">
+                                        <input type="text" name="name" th:value="${name}"
+                                               placeholder="Search by name..." class="form-control"
+                                               maxlength="100">
                                         <!-- No need for hidden inputs, Thymeleaf handles this -->
                                         <button type="submit" class="btn btn-primary">Search</button>
                                     </div>
@@ -184,22 +195,26 @@
                                     <span th:text="${errorMessage}"></span>
                                 </div>
 
+
                                 <div class="table-responsive">
                                     <table id="inventory-table" class="display table table-striped table-hover">
-                                        <thead>
+                                        <thead class="text-center">
                                         <tr>
                                             <th>
                                                 <!-- Corrected sorting links -->
                                                 <a th:href="@{/inventory(name=${name}, page=${currentPage}, size=${pageSize}, sortBy='id', descending= ${sortBy == 'id' ? !descending : false})}">ID</a>
-                                                <span th:if="${sortBy == 'id'}" th:text="${descending ? '▼' : '▲'}"></span>
+                                                <span th:if="${sortBy == 'id'}"
+                                                      th:text="${descending ? '▼' : '▲'}"></span>
                                             </th>
                                             <th>
                                                 <a th:href="@{/inventory(name=${name}, page=${currentPage}, size=${pageSize}, sortBy='name', descending=${sortBy == 'name' ? !descending : false})}">Name</a>
-                                                <span th:if="${sortBy == 'name'}" th:text="${descending ? '▼' : '▲'}"></span>
+                                                <span th:if="${sortBy == 'name'}"
+                                                      th:text="${descending ? '▼' : '▲'}"></span>
                                             </th>
                                             <th>
                                                 <a th:href="@{/inventory(name=${name}, page=${currentPage}, size=${pageSize}, sortBy='quantity', descending=${sortBy == 'quantity' ? !descending : false})}">Quantity</a>
-                                                <span th:if="${sortBy == 'quantity'}" th:text="${descending ? '▼' : '▲'}"></span>
+                                                <span th:if="${sortBy == 'quantity'}"
+                                                      th:text="${descending ? '▼' : '▲'}"></span>
                                             </th>
                                             <th>Action</th>
                                         </tr>
@@ -207,49 +222,68 @@
                                         <tbody>
                                         <!-- Thymeleaf loop -->
                                         <tr th:each="item : ${inventoryList}">
-                                            <td th:text="${item.id}"></td>
-                                            <td th:text="${item.name}"></td>
-                                            <td th:text="${item.quantity}"></td>
+                                            <td th:text="${item.id}" class="text-center"></td>
+                                            <td th:text="${item.name}" class="text-center"></td>
+                                            <td th:text="${item.quantity}" class="text-center"></td>
                                             <td>
                                                 <!-- Update Modal Button -->
-                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                                        th:data-bs-target="'#updateModal-' + ${item.id}">
-                                                    Update
-                                                </button>
-
+                                                <div style="display: flex; justify-content: center; align-items: center;">
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            th:data-bs-target="'#updateModal-' + ${item.id}">
+                                                        Update
+                                                    </button>
+                                                </div>
                                                 <!-- Update Modal -->
-                                                <div class="modal fade" th:id="'updateModal-' + ${item.id}" tabindex="-1"
+                                                <div class="modal fade" th:id="'updateModal-' + ${item.id}"
+                                                     tabindex="-1"
                                                      aria-labelledby="updateModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="updateModalLabel">Update Inventory Item</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <h5 class="modal-title" id="updateModalLabel">Update
+                                                                    Inventory Item</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <!-- Pass ALL parameters to the form -->
-                                                                <form th:action="@{/inventory/update(name=${name}, page=${currentPage}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}" method="post">                                                                    <input type="hidden" name="id" th:value="${item.id}"/>
+                                                                <form th:action="@{/inventory/update(name=${name}, page=${currentPage}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}"
+                                                                      method="post"><input type="hidden" name="id"
+                                                                                           th:value="${item.id}"/>
                                                                     <div class="mb-3">
                                                                         <label for="quantity" class="form-label">Quantity:</label>
-                                                                        <input type="number" class="form-control" id="quantity" name="quantity"
-                                                                               th:value="${0}" min="0" required>
+                                                                        <input type="number" class="form-control"
+                                                                               id="quantity" name="quantity"
+                                                                               th:value="${0}" min="0" max="1000000"
+                                                                               required>
                                                                     </div>
                                                                     <div class="mb-3">
-                                                                        <label class="form-label">Action Type:</label><br>
+                                                                        <label class="form-label">Action
+                                                                            Type:</label><br>
                                                                         <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="isImport" id="import"
+                                                                            <input class="form-check-input" type="radio"
+                                                                                   name="isImport" id="import"
                                                                                    value="true" checked>
-                                                                            <label class="form-check-label" for="import">Import</label>
+                                                                            <label class="form-check-label"
+                                                                                   for="import">Import</label>
                                                                         </div>
                                                                         <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" type="radio" name="isImport" id="export"
+                                                                            <input class="form-check-input" type="radio"
+                                                                                   name="isImport" id="export"
                                                                                    value="false">
-                                                                            <label class="form-check-label" for="export">Export</label>
+                                                                            <label class="form-check-label"
+                                                                                   for="export">Export</label>
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">Close
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-primary">
+                                                                            Save changes
+                                                                        </button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -262,13 +296,17 @@
                                     </table>
                                 </div>
 
+
                                 <!-- Pagination -->
-                                <div class="d-flex justify-content-between" >
+                                <div class="d-flex justify-content-between">
                                     <!-- Page Size Selector -->
                                     <div>
                                         <label for="pageSizeSelect">Items per page:</label>
-                                        <select id="pageSizeSelect" onchange="changePageSize()" class="form-select form-select-sm d-inline-block w-auto">
-                                            <option th:each="sizeOption : ${ {5, 10, 15, 20} }" th:value="${sizeOption}" th:text="${sizeOption}" th:selected="${sizeOption == pageSize}"></option>
+                                        <select id="pageSizeSelect" onchange="changePageSize()"
+                                                class="form-select form-select-sm d-inline-block w-auto">
+                                            <option th:each="sizeOption : ${ {5, 10, 15, 20} }" th:value="${sizeOption}"
+                                                    th:text="${sizeOption}"
+                                                    th:selected="${sizeOption == pageSize}"></option>
                                         </select>
                                     </div>
                                     <nav aria-label="Page navigation">
@@ -282,13 +320,15 @@
                                                 </a>
                                             </li>
                                             <!-- Corrected page number links -->
-                                            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, inventoryList.totalPages - 1)}"
+                                            <li class="page-item"
+                                                th:each="pageNumber : ${#numbers.sequence(0, inventoryList.totalPages - 1)}"
                                                 th:classappend="${pageNumber == currentPage} ? 'active'">
                                                 <a class="page-link"
                                                    th:href="@{/inventory(name=${name}, page=${pageNumber}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}"
                                                    th:text="${pageNumber + 1}"></a>
                                             </li>
-                                            <li class="page-item" th:classappend="${currentPage == inventoryList.totalPages - 1} ? 'disabled'">
+                                            <li class="page-item"
+                                                th:classappend="${currentPage == inventoryList.totalPages - 1} ? 'disabled'">
                                                 <!-- Corrected next page link -->
                                                 <a class="page-link"
                                                    th:href="@{/inventory(name=${name}, page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, descending=${descending})}"
@@ -299,6 +339,7 @@
                                         </ul>
                                     </nav>
 
+
                                 </div>
                             </div>
                         </div>
@@ -308,6 +349,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- JavaScript (unchanged, but I'm including it for completeness) -->
 <script src="/dashboard_layout/js/core/jquery-3.7.1.min.js"></script>
@@ -322,6 +364,7 @@
 <!-- Kaiadmin DEMO methods, don't include it in your project! -->
 <script src="/dashboard_layout/js/setting-demo2.js"></script>
 
+
 <script>
     function changePageSize() {
         const pageSize = document.getElementById('pageSizeSelect').value;
@@ -333,3 +376,4 @@
 </script>
 </body>
 </html>
+

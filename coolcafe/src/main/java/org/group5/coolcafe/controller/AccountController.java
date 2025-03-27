@@ -76,7 +76,10 @@ public class AccountController {
     }
 
     @GetMapping("/profile")
-    public String profile(){
+    public String profile(Model model){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        ManageAccountDTO account = accountService.getAccountByUsername(username);
+        model.addAttribute("account", account);
         return "/dashboard_layout/profile";
     }
 
